@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -43,6 +44,8 @@ public class SectionTest {
     }
 
 
+
+
     @Test
     void getCourseRegistrationNumber() {
         assertEquals(12345, section.getCourseRegistrationNumber());
@@ -71,6 +74,15 @@ public class SectionTest {
     @Test
     void getTimeSlot() {
         assertEquals(timeSlot, section.getTimeSlot());
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void overlapsWith(boolean input) {
+        var mockTimeSlot = mock(TimeSlot.class);
+        when(mockTimeSlot.overlapsWith(timeSlot)).thenReturn(input);
+
+        assertEquals(input, section.overlapsWith(mockTimeSlot));
     }
 
     @Test

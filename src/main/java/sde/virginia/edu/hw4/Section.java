@@ -70,6 +70,7 @@ public class Section {
     public Section(int courseRegistrationNumber, int sectionNumber, Course course, Semester semester, Location location,
                    TimeSlot timeSlot, Lecturer lecturer, int enrollmentCapacity, int waitListCapacity,
                    Set<Student> enrolledStudents, List<Student> waitListedStudents, EnrollmentStatus enrollmentStatus) {
+
         validateInputs(courseRegistrationNumber, sectionNumber, course, semester, location, timeSlot, lecturer,
                 enrollmentCapacity, waitListCapacity, enrolledStudents, waitListedStudents, enrollmentStatus);
 
@@ -85,6 +86,21 @@ public class Section {
         this.enrolledStudents = enrolledStudents;
         this.waitListedStudents = waitListedStudents;
         this.enrollmentStatus = enrollmentStatus;
+    }
+
+    private void validateInputs(int courseRegistrationNumber, int sectionNumber, Course course, Semester semester, Location location, TimeSlot timeSlot, Lecturer lecturer, int enrollmentCapacity, int waitListCapacity, Set<Student> enrolledStudents, List<Student> waitListedStudents, EnrollmentStatus enrollmentStatus) {
+        if (courseRegistrationNumber < 0 || sectionNumber < 0 || course == null || semester == null ||
+                location == null || timeSlot == null || lecturer == null || enrollmentCapacity < 0 ||
+                waitListCapacity < 0 || enrolledStudents == null || waitListedStudents == null ||
+                enrollmentStatus == null) {
+            throw new IllegalArgumentException("Invalid Section Initialization");
+        }
+
+        if (enrollmentCapacity > location.roomCapacity()) {
+            throw new IllegalArgumentException(String.format(
+                    "Enrollment capacity: %d excedes the location fire code capacity %d",
+                    enrollmentCapacity, location.roomCapacity()));
+        }
     }
 
 
@@ -138,6 +154,10 @@ public class Section {
      */
     public TimeSlot getTimeSlot() {
         return timeSlot;
+    }
+
+    public boolean overlapsWith(TimeSlot otherTimeSlot) {
+        return otherTimeSlot.overlapsWith(timeSlot);
     }
 
 
@@ -386,20 +406,5 @@ public class Section {
                 ", sectionNumber=" + sectionNumber +
                 ", course=" + course +
                 '}';
-    }
-
-    private static void validateInputs(int courseRegistrationNumber, int sectionNumber, Course course, Semester semester, Location location, TimeSlot timeSlot, Lecturer lecturer, int enrollmentCapacity, int waitListCapacity, Set<Student> enrolledStudents, List<Student> waitListedStudents, EnrollmentStatus enrollmentStatus) {
-        if (courseRegistrationNumber < 0 || sectionNumber < 0 || course == null || semester == null ||
-                location == null || timeSlot == null || lecturer == null || enrollmentCapacity < 0 ||
-                waitListCapacity < 0 || enrolledStudents == null || waitListedStudents == null ||
-                enrollmentStatus == null) {
-            throw new IllegalArgumentException("Invalid Section Initialization");
-        }
-
-        if (enrollmentCapacity > location.roomCapacity()) {
-            throw new IllegalArgumentException(String.format(
-                    "Enrollment capacity: %d excedes the location fire code capacity %d",
-                    enrollmentCapacity, location.roomCapacity()));
-        }
     }
 }

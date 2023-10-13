@@ -2,6 +2,7 @@ package sde.virginia.edu.hw4;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -86,5 +87,18 @@ public class Catalog {
      */
     public boolean contains(Section section) {
         return sections.contains(section);
+    }
+
+    /**
+     * Returns a section with the matching courseRegistrationNumber
+     * @return an Optional of the matching Section. The optional is empty if no section with the CRN exists.
+     */
+    public Optional<Section> getSectionByCRN(int courseRegistrationNumber) {
+        for (Section section : sections) {
+            if (section.getCourseRegistrationNumber() == courseRegistrationNumber) {
+                return Optional.of(section);
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -14,8 +14,8 @@ public class FinalGradesService {
      * no post-conditions should occur (that is, no grades uploaded and no schedule changes). Be aware that students
      * on the wait list cannot receive grades in the Section.
      *
+     * @see Section#isStudentEnrolled(Student)
      * @see Student#addGrade(Section, Grade)
-     * @see Section#isStudentEnrolled(Student) 
      */
     public void uploadFinalGrades(Section section, Map<Student, Grade> finalGrades) {
         //TODO: implement and test

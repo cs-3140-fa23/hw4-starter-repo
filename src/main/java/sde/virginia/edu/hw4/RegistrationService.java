@@ -64,7 +64,7 @@ public class RegistrationService {
      * @see Section#isWaitListFull() 
      * @see Student#getEnrolledSections()
      * @see Student#getWaitListedSections()
-     * @see TimeSlot#overlapsWith(TimeSlot)
+     * @see Section#overlapsWith(TimeSlot)
      * @see Prerequisite#isSatisfiedBy(Student)
      * @see Student#getCreditLimit() 
      */

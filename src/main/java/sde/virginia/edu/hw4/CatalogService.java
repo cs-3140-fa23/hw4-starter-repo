@@ -23,6 +23,10 @@ public class CatalogService {
          */
         SUCCESSFUL,
         /**
+         * The second could not be added because it's semester doesn't match the catalogs
+         */
+        FAILED_SEMESTER_MISMATCH,
+        /**
          * Section not added to catalog, as it already exists in the catalog.
          */
         FAILED_SECTION_ALREADY_EXISTS,
@@ -68,10 +72,13 @@ public class CatalogService {
      * should be returned.
      * @param section the section to attempt to add to catalog
      * @return a {@link AddSectionResult} enum indicating success or the reason for failure
-     * @see CatalogService#getSectionFromCRN(int)
-     * @see Location
-     * @see TimeSlot#overlapsWith(TimeSlot)
-     * @see Lecturer
+     * @see Section#getSemester()
+     * @see Catalog#getSemester()
+     * @see Catalog#contains(Section)
+     * @see Catalog#getSectionByCRN(int) 
+     * @see Location#equals(Object) 
+     * @see Section#overlapsWith(TimeSlot)
+     * @see Lecturer#equals(Object)
      * @see Section#getEnrollmentSize()
      * @see Section#getWaitListSize()
      */
@@ -86,6 +93,8 @@ public class CatalogService {
      * Student's schedules.
      * @param section the section to be removed
      * @throws IllegalArgumentException if the section is not present in the catalog
+     * @see Catalog#contains(Section)
+     * @see Catalog#remove(Section)
      * @see Section#getEnrolledStudents()
      * @see Section#getWaitListedStudents()
      * @see Student#removeEnrolledSection(Section)
@@ -103,45 +112,5 @@ public class CatalogService {
      */
     public void closeAllSection() {
         //TODO: implement and test
-        //must be implemented using streams!
     }
-
-    /**
-     * Gets the section from a given courseRegistrationNumber (CRN)
-     * @param courseRegistrationNumber a typically 5-digit number unique to a course in a given semester
-     * @return An {@link Optional}
-     */
-    public Optional<Section> getSectionFromCRN(int courseRegistrationNumber) {
-        return Optional.empty();
-        //TODO: implement and test
-    }
-
-    /**
-     * Get all sections where the course matches the mnemonic and courseNumber sorted by section number
-     * in ascending order.
-     *
-     * @param mnemonic the course's mnemonic (i.e., "CS", "APMA") as a {@link String}
-     * @param courseNumber the course's number as a {@String}. (i.e., "3140", "1110")
-     * @return a {@link List} of sections that match the course mnemonic and number.
-     */
-    public List<Section> getSectionsByCourseInfo(String mnemonic, String courseNumber) {
-        return null;
-        //TODO: return a set of all sections in a given location
-        //must be implemented using streams!
-    }
-
-    /**
-     * Get all sections for a given mnemonic that are open to enrollment *and* where the enrollment
-     * is not full. The list should be sorted in ascending order by course number (i.e., "1110", "2100", "3140")
-     * and then by section number if the course number matches (i.e., Section 1 before Section 2)
-     * @param mnemonic the course's mnemonic (i.e., "CS", "APMA") as a {@link String}
-     * @return a sorted {@link List} of sections that have available seats and match the course mnemonic
-     */
-    public List<Section> getAvailableSectionsByMnemonic(String mnemonic) {
-        return null;
-        //TODO: return a set of all sections in a given location
-        //must be implemented using streams!
-    }
-
-
 }
