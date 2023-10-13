@@ -72,7 +72,13 @@ public class Prerequisite {
         return Collections.unmodifiableSet(requiredCourses.keySet());
     }
 
+    /**
+     * Checks if a student meets this pre-requisite
+     * @param student the student to check
+     * @return true if the student meets all the prerequisite conditions. False otherwise.
+     */
     public boolean isSatisfiedBy(Student student) {
+        //TODO: update method to account for student's currently taking the course
         for (Course course: requiredCourses.keySet()) {
             var minimumGrade = requiredCourses.get(course);
             var optionalTranscriptGrade = student.getBestGrade(course);

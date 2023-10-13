@@ -39,7 +39,12 @@ public class CatalogService {
          * Section not added to catalog, the lecturer is already teaching another class that conflicts with this
          * section's timeslot.
          */
-        FAILED_LECTURER_CONFLICT
+        FAILED_LECTURER_CONFLICT,
+        /**
+         * At the time the section is added to the catalog, it's enrollment and wait-list must be empty (that is,
+         * no students registered ahead of time).
+         */
+        FAILED_ENROLLMENT_NOT_EMPTY
     }
 
     /**
@@ -54,6 +59,9 @@ public class CatalogService {
      *     be violated, return {@link AddSectionResult#FAILED_LOCATION_CONFLICT}</li>
      *     <li>No lecturer can teach two sections with overlapping {@link TimeSlot}s. If this rule would be
      *     violated, return {@link AddSectionResult#FAILED_LECTURER_CONFLICT}</li>
+     *     <li>At the time a course is added to the catalog, it must have no students already registred for it. That
+     *     is, the enrollment and waitlist must be empty. If this is violated, return
+     *     {@link AddSectionResult#FAILED_ENROLLMENT_NOT_EMPTY}</li>
      * </ol>
      * If any of the above rules are violated, the section <b>should not</b> be added to the catalog. However, if none
      * of the rules are violated, the section <b>should</b> be added to the catalog, and {@link AddSectionResult#SUCCESSFUL}
@@ -64,19 +72,38 @@ public class CatalogService {
      * @see Location
      * @see TimeSlot#overlapsWith(TimeSlot)
      * @see Lecturer
+     * @see Section#getEnrollmentSize()
+     * @see Section#getWaitListSize()
      */
     public AddSectionResult add(Section section) {
         return null;
         //TODO: implement and test
     }
 
+
     /**
-     * Remove a section from the course catalog.
+     * Remove a section from the course catalog. This should also remove the section from any of the enrolled/wait-list
+     * Student's schedules.
      * @param section the section to be removed
      * @throws IllegalArgumentException if the section is not present in the catalog
+     * @see Section#getEnrolledStudents()
+     * @see Section#getWaitListedStudents()
+     * @see Student#removeEnrolledSection(Section)
+     * @see Student#removeWaitListedSection(Section)
      */
     public void removeSection(Section section) {
         //TODO: implement and test
+    }
+
+
+    /**
+     * Set all sections to closed enrollment. This method should be called at the add deadline each semester.
+     * @see Section#setEnrollmentStatus(EnrollmentStatus)
+     * @see EnrollmentStatus
+     */
+    public void closeAllSection() {
+        //TODO: implement and test
+        //must be implemented using streams!
     }
 
     /**
@@ -115,4 +142,6 @@ public class CatalogService {
         //TODO: return a set of all sections in a given location
         //must be implemented using streams!
     }
+
+
 }

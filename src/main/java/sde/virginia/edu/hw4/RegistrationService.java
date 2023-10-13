@@ -19,7 +19,8 @@ public class RegistrationService {
          */
         SUCCESS_WAIT_LISTED,
         /**
-         * Unable to enroll student because the student is already either enrolled or wait listed in the course
+         * Unable to enroll student because the student is already either enrolled or wait listed in at least one
+         * section of this course in the same semester as the one they are trying to regiser for.
          */
         FAILED_ALREADY_IN_COURSE,
         /**
@@ -55,6 +56,17 @@ public class RegistrationService {
      * @param student the {@link Student} attempting to enroll in a section.
      * @param section the {@link Section} the student is attempting to enroll in
      * @return a {@link RegistrationResult} object indicating success or failure.
+     * @see RegistrationResult
+     * @see Section#isStudentEnrolled(Student)
+     * @see Section#isStudentWaitListed(Student) 
+     * @see Section#getEnrollmentStatus()
+     * @see Section#isEnrollmentFull() 
+     * @see Section#isWaitListFull() 
+     * @see Student#getEnrolledSections()
+     * @see Student#getWaitListedSections()
+     * @see TimeSlot#overlapsWith(TimeSlot)
+     * @see Prerequisite#isSatisfiedBy(Student)
+     * @see Student#getCreditLimit() 
      */
     public RegistrationResult register(Student student, Section section) {
         return null;
@@ -64,7 +76,8 @@ public class RegistrationService {
     /**
      * Drop a {@link Student} from either the enrollment or wait list for a given {@list Section}. A successful drop
      * should also be reflected in the {@link Student}'s {@link Schedule}. This will also be added to the student's
-     * transcript, adding a Grade of {@link Grade#DROP} for this section to their transcript.
+     * transcript, adding a Grade of {@link Grade#DROP} for this section to their transcript. (Note that this should be
+     * done even if the student already has a grade.)
      *
      * If the student was enrolled (i.e., not waitlisted), and this frees up an empty seat in the class's enrollment,
      * AND the {@link Section}'s enrollment is still {@link EnrollmentStatus#OPEN open}, then the first student
@@ -77,6 +90,15 @@ public class RegistrationService {
      * @param section the {@link Section} to drop the student from.
      * @return true if the student was dropped successfully, false if they could not be dropped because they were
      * neither enrolled nor wait listed in the section.
+     * @see Section#isStudentEnrolled(Student)
+     * @see Section#isStudentWaitListed(Student)
+     * @see Section#getEnrollmentStatus()
+     * @see Section#isEnrollmentFull()
+     * @see Section#removeStudentFromEnrolled(Student)
+     * @see Section#removeStudentFromWaitList(Student)
+     * @see Section#getFirstStudentOnWaitList()
+     * @see Student#removeEnrolledSection(Section)
+     * @see Student#removeWaitListedSection(Section)
      */
     public boolean drop(Student student, Section section) {
         return false;

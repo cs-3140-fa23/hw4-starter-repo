@@ -190,6 +190,14 @@ public class Section {
     }
 
     /**
+     * Returns the set of students enrolled in the section
+     * @return an unmodifiable {@link Set} of students enrolled in the course.
+     */
+    public Set<Student> getEnrolledStudents() {
+        return Collections.unmodifiableSet(enrolledStudents);
+    }
+
+    /**
      * Adds the student to the section enrollment if there is space.
      * @param student the student to add to enrollment
      * @throws IllegalStateException if the section enrollment is already full.
@@ -270,6 +278,13 @@ public class Section {
         this.waitListCapacity = waitListCapacity;
     }
 
+    /**
+     * Returns the list of students enrolled in the section, in order of their wait list priority
+     * @return an unmodifiable {@link List} of students waitListed in the course.
+     */
+    public List<Student> getWaitListedStudents() {
+        return Collections.unmodifiableList(waitListedStudents);
+    }
 
     /**
      * Returns the first student on the wait-list (the next student to be added if space opens up)
