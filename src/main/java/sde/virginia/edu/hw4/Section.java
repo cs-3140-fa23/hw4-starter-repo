@@ -190,14 +190,6 @@ public class Section {
     }
 
     /**
-     * Returns the set of students enrolled in the section
-     * @return an unmodifiable {@link Set} of students enrolled in the course.
-     */
-    public Set<Student> getEnrolledStudents() {
-        return Collections.unmodifiableSet(enrolledStudents);
-    }
-
-    /**
      * Adds the student to the section enrollment if there is space.
      * @param student the student to add to enrollment
      * @throws IllegalStateException if the section enrollment is already full.
@@ -216,6 +208,15 @@ public class Section {
         }
 
         enrolledStudents.add(student);
+    }
+
+    /**
+     * Checks if a student is enrolled
+     * @param student the {@Student}
+     * @return true if the student is enrolled, false if wait listed or not enrolled at all.
+     */
+    public boolean isStudentEnrolled(Student student) {
+        return enrolledStudents.contains(student);
     }
 
     /**
@@ -263,16 +264,12 @@ public class Section {
      * @param waitListCapacity the new wait list capacity for the course.
      */
     public void setWaitListCapacity(int waitListCapacity) {
+        if (waitListCapacity < 0) {
+            throw new IllegalArgumentException("Cannot have negative capacity");
+        }
         this.waitListCapacity = waitListCapacity;
     }
 
-    /**
-     * Returns the list of students enrolled in the section, in order of their wait list priority
-     * @return an unmodifiable {@link List} of students waitListed in the course.
-     */
-    public List<Student> getWaitListedStudents() {
-        return Collections.unmodifiableList(waitListedStudents);
-    }
 
     /**
      * Returns the first student on the wait-list (the next student to be added if space opens up)
@@ -311,6 +308,15 @@ public class Section {
         }
 
         waitListedStudents.add(student);
+    }
+
+    /**
+     * Checks if a student is wait listed
+     * @param student the {@Student}
+     * @return true if the student is wait-listed, false if enrolled or not enrolled at all.
+     */
+    public boolean isStudentWaitListed(Student student) {
+        return waitListedStudents.contains(student);
     }
 
     /**

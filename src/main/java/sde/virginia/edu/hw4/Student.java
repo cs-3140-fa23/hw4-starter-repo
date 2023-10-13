@@ -31,9 +31,9 @@ public class Student {
     private int year;
 
     /**
-     * The student's current schedule
+     * The student's schedule, including enrolled and wait listed sections.
      */
-    private final Schedule currentSchedule;
+    private final Schedule schedule;
     /**
      * The student's transcript
      */
@@ -52,8 +52,8 @@ public class Student {
     }
 
     protected Student(long id, String computingId, String firstName, String lastName,
-                      int year, Schedule currentSchedule, Transcript transcript) {
-        if (currentSchedule == null || transcript == null || year <= 0) {
+                      int year, Schedule schedule, Transcript transcript) {
+        if (schedule == null || transcript == null || year <= 0) {
             throw new IllegalArgumentException("Invalid Student configuration.");
         }
         this.id = id;
@@ -61,7 +61,7 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.year = year;
-        this.currentSchedule = currentSchedule;
+        this.schedule = schedule;
         this.transcript = transcript;
     }
 
@@ -137,7 +137,7 @@ public class Student {
      * @return an immutable copy of the students enrolled sections as a {@link Set}
      */
     public Set<Section> getEnrolledSections() {
-        return currentSchedule.getEnrolledSections();
+        return schedule.getEnrolledSections();
     }
 
     /**
@@ -145,7 +145,7 @@ public class Student {
      * @return false if the student is already enrolled in the section. True otherwise.
      */
     public boolean addEnrolledSection(Section section) {
-        return currentSchedule.addEnrolledSection(section);
+        return schedule.addEnrolledSection(section);
     }
 
     /**
@@ -155,7 +155,7 @@ public class Student {
      */
 
     public boolean removeEnrolledSection(Section section) {
-        return currentSchedule.removeEnrolledSection(section);
+        return schedule.removeEnrolledSection(section);
     }
 
     /**
@@ -164,11 +164,11 @@ public class Student {
      * @return true if the student is enrolled, false if not
      */
     public boolean isEnrolledInSection(Section section) {
-        return currentSchedule.isEnrolledInSection(section);
+        return schedule.isEnrolledInSection(section);
     }
 
     public boolean isEnrolledInCourse(Course course) {
-        return currentSchedule.isEnrolledInCourse(course);
+        return schedule.isEnrolledInCourse(course);
     }
 
     /**
@@ -176,7 +176,7 @@ public class Student {
      * @return an immutable copy of the students wait listed sections as a {@link Set}
      */
     public Set<Section> getWaitListedSections() {
-        return currentSchedule.getWaitListedSections();
+        return schedule.getWaitListedSections();
     }
 
     /**
@@ -184,7 +184,7 @@ public class Student {
      * @return false if the student is already enrolled in the section. True otherwise.
      */
     public boolean addWaitListedSection(Section section) {
-        return currentSchedule.addWaitListedSection(section);
+        return schedule.addWaitListedSection(section);
     }
 
     /**
@@ -193,7 +193,7 @@ public class Student {
      * @return false if the student was not enrolled in the section. True otherwise.
      */
     public boolean removeWaitListedSection(Section section) {
-        return currentSchedule.removeWaitListedSection(section);
+        return schedule.removeWaitListedSection(section);
     }
 
     /**
@@ -202,7 +202,7 @@ public class Student {
      * @return true if the student is wait listed in that section, false if not
      */
     public boolean isWaitListedInSection(Section section) {
-        return currentSchedule.isWaitListedInSection(section);
+        return schedule.isWaitListedInSection(section);
     }
 
     /**
@@ -256,6 +256,18 @@ public class Student {
      */
     public boolean isOnProbation() {
         return transcript.isOnProbation();
+    }
+
+    /**
+     * Gets the students credit limit (the maximum number of credits they can be enrolled and waitlisted in). Student's
+     * on Probation receive a reduced credit limit.
+     * @return the credit limit as an int
+     */
+    public int getCreditLimit() {
+        if (isOnProbation()) {
+            return Schedule.PROBATION_CREDIT_LIMIT;
+        }
+        else return Schedule.DEFAULT_CREDIT_LIMIT;
     }
 
     @Override

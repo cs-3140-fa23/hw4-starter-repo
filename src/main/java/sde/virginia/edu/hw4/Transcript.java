@@ -95,5 +95,4 @@ public class Transcript {
     public boolean isOnProbation() {
         return getGPA() < PROBATION_GPA_THRESHOLD;
     }
-
 }

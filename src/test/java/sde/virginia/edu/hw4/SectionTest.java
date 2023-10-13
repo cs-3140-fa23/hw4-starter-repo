@@ -3,6 +3,8 @@ package sde.virginia.edu.hw4;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,6 +42,7 @@ public class SectionTest {
                 245, 199, enrolledStudents, waitListedStudents, EnrollmentStatus.OPEN);
     }
 
+
     @Test
     void getCourseRegistrationNumber() {
         assertEquals(12345, section.getCourseRegistrationNumber());
@@ -76,8 +79,44 @@ public class SectionTest {
     }
 
     @Test
+    void isEnrollmentFull_true() {
+        when(enrolledStudents.size()).thenReturn(section.getEnrollmentCapacity());
+        assertTrue(section.isEnrollmentFull());
+    }
+
+    @Test
+    void isEnrollmentFull_true_overCapacity() {
+        when(enrolledStudents.size()).thenReturn(section.getEnrollmentCapacity()+1);
+        assertTrue(section.isEnrollmentFull());
+    }
+
+    @Test
+    void isEnrollmentFull_false() {
+        when(enrolledStudents.size()).thenReturn(section.getEnrollmentCapacity()-1);
+        assertFalse(section.isEnrollmentFull());
+    }
+
+    @Test
     void getEnrollmentCapacity() {
         assertEquals(245, section.getEnrollmentCapacity());
+    }
+
+    @Test
+    void setEnrollmentCapacity() {
+        section.setEnrollmentCapacity(200);
+        assertEquals(200, section.getEnrollmentCapacity());
+    }
+
+    @Test
+    void setEnrollmentCapacity_exception_negative() {
+        assertThrows(IllegalArgumentException.class, () ->
+                section.setEnrollmentCapacity(-1));
+    }
+
+    @Test
+    void setEnrollmentCapacity_exception_fireCode() {
+        assertThrows(IllegalArgumentException.class, () ->
+                section.setEnrollmentCapacity(246));
     }
 
     @Test
@@ -124,6 +163,15 @@ public class SectionTest {
         verify(enrolledStudents, never()).add(student);
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void isStudentEnrolled(boolean input) {
+        var student = mock(Student.class);
+        when(enrolledStudents.contains(student)).thenReturn(input);
+
+        assertEquals(input, section.isStudentEnrolled(student));
+    }
+
     @Test
     void removeStudentFromEnrolled() {
         var student = mock(Student.class);
@@ -153,6 +201,35 @@ public class SectionTest {
     void getWaitListSize() {
         when(waitListedStudents.size()).thenReturn(99);
         assertEquals(99, section.getWaitListSize());
+    }
+
+    @Test
+    void isWaitListFull_true() {
+        when(waitListedStudents.size()).thenReturn(section.getWaitListCapacity());
+        assertTrue(section.isWaitListFull());
+    }
+
+    @Test
+    void isWaitListFull_true_overCapacity() {
+        when(waitListedStudents.size()).thenReturn(section.getWaitListCapacity() + 1);
+        assertTrue(section.isWaitListFull());
+    }
+
+    @Test
+    void isWaitListFull_false() {
+        when(waitListedStudents.size()).thenReturn(section.getWaitListCapacity() - 1);
+        assertFalse(section.isWaitListFull());
+    }
+
+    @Test
+    void setWaitListCapacity() {
+        section.setWaitListCapacity(50);
+        assertEquals(50, section.getWaitListCapacity());
+    }
+
+    @Test
+    void setWaitListCapacity_exception() {
+        assertThrows(IllegalArgumentException.class, () -> section.setWaitListCapacity(-1));
     }
 
     @Test
@@ -238,6 +315,17 @@ public class SectionTest {
         assertThrows(IllegalArgumentException.class, () -> section.addStudentToWaitList(student));
 
         verify(waitListedStudents, never()).add(student);
+    }
+
+
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void isStudentWaitListed(boolean input) {
+        var student = mock(Student.class);
+        when(waitListedStudents.contains(student)).thenReturn(input);
+
+        assertEquals(input, section.isStudentWaitListed(student));
     }
 
     @Test

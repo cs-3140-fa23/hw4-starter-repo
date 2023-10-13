@@ -30,6 +30,8 @@ class StudentTest {
 
     private Student student;
 
+
+
     @BeforeEach
     void setUp() {
         student = new Student(123456789, "abc2def", "John", "Doe", 1, schedule, transcript);
@@ -201,4 +203,17 @@ class StudentTest {
         when(transcript.isOnProbation()).thenReturn(input);
         assertEquals(input, student.isOnProbation());
     }
+
+    @Test
+    void getCreditLimit_normal() {
+        when(transcript.isOnProbation()).thenReturn(false);
+        assertEquals(Schedule.DEFAULT_CREDIT_LIMIT, student.getCreditLimit());
+    }
+
+    @Test
+    void getCreditLimit_probation() {
+        when(transcript.isOnProbation()).thenReturn(true);
+        assertEquals(Schedule.PROBATION_CREDIT_LIMIT, student.getCreditLimit());
+    }
+
 }

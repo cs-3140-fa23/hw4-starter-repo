@@ -1,48 +1,83 @@
 package sde.virginia.edu.hw4;
 
 public class RegistrationService {
+    /**
+     * Describes the result of {@link RegistrationService#register(Student, Section)}. Either the student was:
+     * <ul>
+     *     <li>Successfully enrolled in the section</li>
+     *     <li>Successfully waited list in the section</li>
+     *     <li>Could not be enrolled for some reason</li>
+     * </ul>
+     */
     public enum RegistrationResult {
         /**
          * The student was successfully enrolled into the section.
          */
-        ENROLLED,
+        SUCCESS_ENROLLED,
         /**
          * The student was successfully added to the wait list for the section.
          */
-        WAIT_LISTED,
+        SUCCESS_WAIT_LISTED,
         /**
          * Unable to enroll student because the student is already either enrolled or wait listed in the course
          */
-        ALREADY_IN_COURSE,
+        FAILED_ALREADY_IN_COURSE,
         /**
          * Unable to enroll because the course is closed
          */
-        ENROLLMENT_CLOSED,
+        FAILED_ENROLLMENT_CLOSED,
 
         /**
          * Unable to enroll because both the enrollment and wait list for the course are full
          */
-        SECTION_FULL,
+        FAILED_SECTION_FULL,
 
         /**
          * Unable to enroll because the student is either enrolled or wait listed in a class with a time conflict
          */
-        SCHEDULE_CONFLICT,
+        FAILED_SCHEDULE_CONFLICT,
         /**
          * Unable to enroll because the student does not meet the prerequisites for the class.
          */
-        PREREQUISITE_NOT_MET,
+        FAILED_PREREQUISITE_NOT_MET,
         /**
-         *
+         * Unable to enroll because this would cause the student to exceed their credit limit (combining the credits
+         * that they are enrolled AND waitlisted in).
          */
-        CREDIT_LIMIT_VIOLATION
+        FAILED_CREDIT_LIMIT_VIOLATION
     }
 
+    /**
+     * Attempts to enroll a {@link Student} in the a {@link Section}. If the student is successfully added to the
+     * enrollment or the wait list for a given section, that student's {@link Schedule} should also be updated. However,
+     * if the student fails to enroll or be wait listed in the section, no changes should occur.
+     *
+     * @param student the {@link Student} attempting to enroll in a section.
+     * @param section the {@link Section} the student is attempting to enroll in
+     * @return a {@link RegistrationResult} object indicating success or failure.
+     */
     public RegistrationResult register(Student student, Section section) {
         return null;
         //TODO: implement and test
     }
 
+    /**
+     * Drop a {@link Student} from either the enrollment or wait list for a given {@list Section}. A successful drop
+     * should also be reflected in the {@link Student}'s {@link Schedule}. This will also be added to the student's
+     * transcript, adding a Grade of {@link Grade#DROP} for this section to their transcript.
+     *
+     * If the student was enrolled (i.e., not waitlisted), and this frees up an empty seat in the class's enrollment,
+     * AND the {@link Section}'s enrollment is still {@link EnrollmentStatus#OPEN open}, then the first student
+     * on the wait list should be removed from the wait list and added to the section's enrollment automatically. That
+     * student's schedule should also be updated to reflect the change. However, if enrollment for the section is
+     * {@link EnrollmentStatus#CLOSED closed}, no students should be added to enrollment even if the course is under
+     * enrollment capacity.
+     *
+     * @param student the {@link Student} attempting to drop from a section's enrollment or wait list
+     * @param section the {@link Section} to drop the student from.
+     * @return true if the student was dropped successfully, false if they could not be dropped because they were
+     * neither enrolled nor wait listed in the section.
+     */
     public boolean drop(Student student, Section section) {
         return false;
         //TODO: implement and test
